@@ -104,7 +104,7 @@ namespace TagsManagement.Repositories.Implements
                 //    t.Name.Equals(tagName.Normalize(), StringComparison.OrdinalIgnoreCase));
                 #endregion
 
-                #region attempt 3 (fixed the collocation), reference: https://stackoverflow.com/questions/3843060/linq-to-entities-case-sensitive-comparison
+                #region attempt 3 (successfully fixed the collocation!!), reference: https://stackoverflow.com/questions/3843060/linq-to-entities-case-sensitive-comparison
                 Tag? tag = _dbContext.Tags.Where(t => t.Name == tagName)
                     .AsEnumerable()
                     .First(t => t.Name == tagName);
@@ -117,7 +117,7 @@ namespace TagsManagement.Repositories.Implements
                 #endregion
 
 
-                // If tag with that n   ame doesn't exist in database, create it
+                // If tag with that name doesn't exist in database, create it
                 if (tag == null)
                 {
                     tag = new Tag { Name = tagName, Id = Guid.NewGuid().ToString() };

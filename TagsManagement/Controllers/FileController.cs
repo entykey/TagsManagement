@@ -23,11 +23,32 @@ namespace TagsManagement.Controllers
         {
             // correct file mime type is important, is not match -> the browser might refuse to render/download
             string mimeType = "png";
-            string filePath = @"C:\Users\TuanMacbookPro\Downloads\Using-Both-Repository"+"."+ mimeType;
+            string fileName = "Using-Both-Repository";
+            string filePath = @"C:\Users\TuanMacbookPro\Downloads\" + fileName + "."+ mimeType;
+            string contentType = $"image/{mimeType}";   // auto convert to this contentType
 
             Byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
 
-            return File(fileBytes, $"image/{mimeType}");   // auto convert to jpg
+
+            return File(fileBytes, contentType);   
+        }
+
+        // @"C:\Users\TuanMacbookPro\Documents\ASPWebAPIs\ebooks\"
+        [HttpGet("downloadPdf")]
+        public async Task<FileContentResult> DownloadOriginalPdf()
+        {
+            // correct file mime type is important, is not match -> the browser might refuse to render/download
+            string mimeType = "pdf";
+            string fileName = "ASP_NET_Identity";
+            string filePath = @"C:\Users\TuanMacbookPro\Documents\ASPWebAPIs\ebooks\" + fileName + "." + mimeType;
+            string contentType = $"application/{mimeType}";
+
+            Byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+
+            // set Content-Disposition header to "attachment"
+            Response.Headers.Add("Content-Disposition", $"attachment; filename={fileName}.{mimeType}");
+
+            return File(fileBytes, contentType);
         }
 
 

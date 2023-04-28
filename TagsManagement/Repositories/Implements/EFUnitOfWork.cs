@@ -8,7 +8,10 @@ namespace TagsManagement.Repositories.Implements
     {
         private readonly EFAppDbContext _dbContext;
 
+        // testing:
         private IRepository<Tag> _genericTags;
+
+        // in use:
         private ITagRepository _tags;
         private IPostRepository _posts;
         private readonly IConfiguration _configuration;  // net 7.0 (get environment variables)

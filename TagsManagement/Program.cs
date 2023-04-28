@@ -7,6 +7,7 @@ using TagsManagement.Repositories.Interfaces;
 using TagsManagement.Filters;
 using TagsManagement.Middlewares;
 using System.Globalization;
+using TagsManagement.Services.Implements;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +84,7 @@ builder.Services.AddSwaggerGen();
 
 // Inject the unit of work as a scoped dependency
 builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+builder.Services.AddScoped<ITagService, TagService>();
 
 var app = builder.Build();
 

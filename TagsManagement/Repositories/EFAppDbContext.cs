@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using TagsManagement.DomainModels;
-using TagsManagement.DomainModels.Contents;
-
-namespace TagsManagement.Repositories
+﻿namespace TagsManagement.Repositories
 {
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
+    using DomainModels;
+    using DomainModels.Contents;
+
     public class EFAppDbContext : IdentityDbContext
     {
         public EFAppDbContext(DbContextOptions options) : base(options) { }
@@ -21,34 +21,34 @@ namespace TagsManagement.Repositories
 
             #region configure many-many relations:
 
-            // Post - Tag:
+            // Post - Tag joining entity:
             modelBuilder.Entity<PostTag>()
                 .HasKey(sc => new { sc.PostId, sc.TagId });
 
             modelBuilder.Entity<PostTag>()
                 .HasOne<Tag>(sc => sc.Tag)
-                .WithMany(s => s.PostTags)   // PostTags is a field in Tag model
+                .WithMany(s => s.PostTags)   // PostTags is a ICollection<PostTag> field in Tag model
                 .HasForeignKey(sc => sc.TagId);       // a field (foreignkey) in PostTag
 
             modelBuilder.Entity<PostTag>()
                 .HasOne<Post>(sc => sc.Post)
-                .WithMany(s => s.PostTags)   // PostTags is a field in Post model
+                .WithMany(s => s.PostTags)   // PostTags is a ICollection<PostTag> field in Post model
                 .HasForeignKey(sc => sc.PostId);       // a field (foreignkey) in PostTag
 
 
-            // Video - Tag:
+            // Video - Tag joining enity:
             modelBuilder.Entity<VideoTag>()
                 .HasKey(sc => new { sc.VideoId, sc.TagId });
 
-
+            
             modelBuilder.Entity<VideoTag>()
                 .HasOne<Tag>(sc => sc.Tag)
-                .WithMany(s => s.VideoTags)   // VideoTags is a field in Tag model
+                .WithMany(s => s.VideoTags)   // VideoTags is a ICollection field in Tag model
                 .HasForeignKey(sc => sc.TagId);       // a field (foreignkey) in VideoTag
 
             modelBuilder.Entity<VideoTag>()
                 .HasOne<Video>(sc => sc.Video)
-                .WithMany(s => s.VideoTags)   // VideoTags is a field in Post model
+                .WithMany(s => s.VideoTags)   // VideoTags is a ICollection field in Video model
                 .HasForeignKey(sc => sc.VideoId);       // a field (foreignkey) in VideoTag
 
 
@@ -79,10 +79,10 @@ namespace TagsManagement.Repositories
         // Tag entity:
         public DbSet<Tag> Tags { get; set; }
 
-        // PostTag relation:
+        // PostTag joining entity:
         public DbSet<PostTag> PostTags { get; set; }
 
-        // VideoTag relation:
+        // VideoTag joining entity:
         public DbSet<VideoTag> VideoTags { get; set; }
 
         // content entities:

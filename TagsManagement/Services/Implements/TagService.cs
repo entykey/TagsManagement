@@ -29,9 +29,27 @@ namespace TagsManagement.Services.Implements
             return tagvm;
         }
 
-        public async Task<IEnumerable<TagViewModel>> GetAllTagsAsync()
+        public async Task<IEnumerable<TagViewModel>> GetAllTagsAsQueryable()
         {
+            // DAL
+            var tags = await Task.FromResult(_unitOfWork.TagRepository.GetAll());
+
+            // map to tag DTO:
+            //return _mapper.Map<IEnumerable<TagViewModel>>(tags);
+
+            List<TagViewModel> tagvms = new List<TagViewModel>();
+            foreach (var tag in tags)
+            {
+                tagvms.Add(new TagViewModel { Name = tag.Name });
+            }
+            return tagvms;
+        }
+        public async Task<IEnumerable<TagViewModel>> GetAllTagsAsList()
+        {
+            // DAL
             var tags = await _unitOfWork.TagRepository.GetAllAsync();
+
+            // map to tag DTO:
             //return _mapper.Map<IEnumerable<TagViewModel>>(tags);
 
             List<TagViewModel> tagvms = new List<TagViewModel>();

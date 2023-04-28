@@ -13,7 +13,7 @@ namespace TagsManagement.Repositories.Interfaces
         Task AddAsync(TEntity entity);
         //Task AddRangeAsync(IEnumerable<TEntity> entities);
         void Update(TEntity entity);    // (entityframwork doesn't have async version of Update())
-        void Delete(TEntity entity);
+        void Delete(TEntity entity);    // (entityframwork doesn't have async version of Delete())
         void DeleteAll();
     }
 }

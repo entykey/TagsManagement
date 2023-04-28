@@ -8,53 +8,57 @@ namespace TagsManagement.Repositories.Implements.ORM
     public abstract class EFRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
         protected readonly EFAppDbContext _dbContext;
+        private DbSet<TEntity> entities;    // initialize generic T entity for the entire repository
 
         public EFRepository(EFAppDbContext dbContext)
         {
             _dbContext = dbContext;
+            entities = _dbContext.Set<TEntity>();
         }
 
         public async Task<TEntity> GetByIdAsync(string id)
         {
             // or:
             //return await _dbContext.Set<TEntity>().FindAsync(id);
-            return await _dbContext.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
+            //return await _dbContext.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
+            return await entities.FirstOrDefaultAsync(e => e.Id == id);
 
         }
 
         public IQueryable<TEntity> GetAll()     // AsQueryable (synchronous)
         {
-            return _dbContext.Set<TEntity>().AsQueryable();
+            //return _dbContext.Set<TEntity>().AsQueryable();
+            return entities.AsQueryable();  // more clean code
         }
 
         public async Task<List<TEntity>> GetAllAsync()
         {
-            return await _dbContext.Set<TEntity>().ToListAsync();
+            return await entities.ToListAsync();
         }
 
         public async Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _dbContext.Set<TEntity>().Where(predicate).ToListAsync();
+            return await entities.Where(predicate).ToListAsync();
         }
 
         public async Task AddAsync(TEntity entity)
         {
-            await _dbContext.Set<TEntity>().AddAsync(entity);
+            await entities.AddAsync(entity);
         }
 
         public void Update(TEntity entity)    // Update (synchronous)
         {
-            _dbContext.Set<TEntity>().Update(entity);
+            entities.Update(entity);
         }
 
         public void Delete(TEntity entity)    // Delete (synchronous)
         {
-            _dbContext.Set<TEntity>().Remove(entity);
+            entities.Remove(entity);
         }
 
         public void DeleteAll()               // DeleteRange (synchronous)
         {
-            _dbContext.Set<TEntity>().RemoveRange(_dbContext.Set<TEntity>());
+            entities.RemoveRange(_dbContext.Set<TEntity>());
             //await _dbContext.SaveChangesAsync();  // no need here, it's UnitOfWork's job
         }
 

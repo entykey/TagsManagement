@@ -11,18 +11,42 @@ namespace TagsManagement.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public TagsController(IUnitOfWork unitOfWork)
+        // inject service(bussiness logics):
+        private readonly ITagService _tagService;
+
+        public TagsController(IUnitOfWork unitOfWork, ITagService tagService)
         {
             _unitOfWork = unitOfWork;
+            _tagService = tagService;
         }
 
         [HttpGet("AsList")]
         public async Task<ActionResult<IEnumerable<Tag>>> GetAllTagsAsList()
         {
             var tags = await _unitOfWork.Tags.GetAllAsync();    // async
+            // NOTE: nhược điểm của approach này là :
+            // ta gọi unitofwork trong controller thay vì service, nên data trả về trực tiếp
+            // là data system, ko đc map qua DTO hay view model, bussiness logics
+            // => less secure & khó thêm bussiness logics ( chỉ có thể get all )
 
             return Ok(tags);
         }
+
+        // using service for better bussiness logics
+        [HttpGet("AsListByService")]
+        public async Task<ActionResult<IEnumerable<TagViewModel>>> GetAllTagsAsListByService()
+        {
+            var tags = await _tagService.GetAllTagsAsList();
+            return Ok(tags);
+        }
+
+        [HttpGet("AsQueryableByService")]
+        public async Task<ActionResult<IEnumerable<TagViewModel>>> GetAllTagsAsQueryableByService()
+        {
+            var tags = await _tagService.GetAllTagsAsQueryable();
+            return Ok(tags);
+        }
+
         [HttpGet("AsQueryable")]
         public async Task<ActionResult<IEnumerable<Tag>>> GetAllTagsAsQueryable()
         {

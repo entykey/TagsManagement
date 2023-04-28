@@ -1,5 +1,7 @@
 ﻿namespace TagsManagement.DomainModels
 {
+    using System.ComponentModel.DataAnnotations;
+
     public abstract class BaseEntity
     {
         public string Id { get; set; }
